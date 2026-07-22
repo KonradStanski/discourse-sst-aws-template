@@ -1,3 +1,5 @@
+/// <reference path="./.sst/platform/config.d.ts" />
+
 import * as aws from "@pulumi/aws";
 import * as pulumi from "@pulumi/pulumi";
 import { readFileSync } from "node:fs";
@@ -127,7 +129,9 @@ export default $config({
       vpcSecurityGroupIds: [securityGroup.id],
       iamInstanceProfile: instanceProfile.name,
       userData,
-      userDataReplaceOnChange: true,
+      // Keep the host and its local Discourse data across config changes.
+      // Apply app.yml changes with the SSM rebuild command documented in README.
+      userDataReplaceOnChange: false,
       rootBlockDevice: { volumeSize: 30, volumeType: "gp3", encrypted: true },
       tags: { Name: `${$app.name}-${$app.stage}` },
     });
@@ -135,7 +139,7 @@ export default $config({
     new aws.ec2.EipAssociation("DiscourseIpAssociation", { instanceId: instance.id, allocationId: address.id });
 
     return {
-      url: $interpolate`http://${address.publicIp}`,
+      url: pulumi.interpolate`http://${address.publicIp}`,
       instanceId: instance.id,
       secretArn: secret.arn,
       bucketName: bucket.bucket,

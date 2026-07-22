@@ -45,7 +45,16 @@ Then point DNS at the `url` output. The first boot installs Docker and the upstr
 
 Changing SST infrastructure or the checked-in config is reproducible. The instance is replaced when `userDataReplaceOnChange` detects a bootstrap change. Persistent content must be restored from S3 backups or moved to external RDS for a production architecture.
 
-This single-instance example is not zero-downtime: Discourse rebuilds briefly stop the application. A production HA version should use external RDS, a managed Redis service, shared object storage, and a blue/green EC2 or ECS rollout behind an ALB.
+This single-instance example is not zero-downtime: Discourse rebuilds briefly stop the application. Infrastructure redeploys preserve the host; after changing `config/app.yml.template`, run `/usr/local/bin/discourse-rebuild` through SSM. A production HA version should use external RDS, a managed Redis service, shared object storage, and a blue/green EC2 or ECS rollout behind an ALB.
+
+Example SSM rebuild command:
+
+```bash
+aws ssm send-command --instance-ids "$INSTANCE_ID" \
+  --document-name AWS-RunShellScript \
+  --parameters commands='["/usr/local/bin/discourse-rebuild"]' \
+  --region "$AWS_REGION"
+```
 
 ## Teardown
 
