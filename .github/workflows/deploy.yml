@@ -25,4 +25,8 @@ jobs:
           aws-region: ${{ env.AWS_REGION }}
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-      - run: npx sst deploy --stage production
+      - run: ./scripts/deploy.sh
+        env:
+          SST_STAGE: production
+          DISCOURSE_HOSTNAME: forum.example.com
+          DISCOURSE_ADMIN_EMAIL: admin@example.com
