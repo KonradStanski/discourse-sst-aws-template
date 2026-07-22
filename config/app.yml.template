@@ -1,0 +1,34 @@
+templates:
+  - "templates/postgres.template.yml"
+  - "templates/redis.template.yml"
+  - "templates/web.template.yml"
+
+expose:
+  - "80:80"
+  - "443:443"
+
+params:
+  db_default_text_search_config: "pg_catalog.english"
+
+env:
+  DISCOURSE_HOSTNAME: "__HOSTNAME__"
+  DISCOURSE_DEVELOPER_EMAILS: "__ADMIN_EMAIL__"
+  DISCOURSE_DB_HOST: "localhost"
+  DISCOURSE_REDIS_HOST: "localhost"
+  DISCOURSE_CDN_URL: ""
+  DISCOURSE_S3_BUCKET: "__S3_BUCKET__"
+  DISCOURSE_S3_REGION: "__AWS_REGION__"
+  DISCOURSE_S3_INSTALL_CORS_RULE: "true"
+  DISCOURSE_DB_PASSWORD: "__DB_PASSWORD__"
+  DISCOURSE_DB_USERNAME: "__DB_USERNAME__"
+  DISCOURSE_DB_NAME: "__DB_NAME__"
+  DISCOURSE_REDIS_PASSWORD: "__REDIS_PASSWORD__"
+  DISCOURSE_S3_ACCESS_KEY_ID: "__S3_ACCESS_KEY_ID__"
+  DISCOURSE_S3_SECRET_ACCESS_KEY: "__S3_SECRET_ACCESS_KEY__"
+
+hooks:
+  after_code:
+    - exec:
+        cd: $home/plugins
+        cmd:
+          - "git clone https://github.com/discourse/discourse-solved.git || true"

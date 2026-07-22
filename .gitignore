@@ -1,0 +1,6 @@
+.sst/
+node_modules/
+.env
+*.local
+secrets/*.json
+.DS_Store

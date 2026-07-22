@@ -1,0 +1,17 @@
+{
+  "name": "discourse-sst-aws-template",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "deploy": "sst deploy",
+    "remove": "sst remove",
+    "typecheck": "tsc --noEmit"
+  },
+  "devDependencies": {
+    "@pulumi/aws": "^6.78.0",
+    "@pulumi/pulumi": "^3.153.1",
+    "@types/node": "^22.15.0",
+    "sst": "^3.17.11",
+    "typescript": "^5.8.3"
+  }
+}
